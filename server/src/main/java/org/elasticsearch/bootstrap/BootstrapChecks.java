@@ -539,7 +539,7 @@ final class BootstrapChecks {
 
         @Override
         public BootstrapCheckResult check(BootstrapContext context) {
-            if (BootstrapSettings.SYSTEM_CALL_FILTER_SETTING.get(context.settings()) && !isSystemCallFilterInstalled()) {
+            if (BootstrapSettings.SYSTEM_CALL_FILTER_SETTING.get(context.settings()) && !isSystemCallFilterInstalled() && !"loongarch64".equals(System.getProperty("os.arch"))) {
                 final String message =  "system call filters failed to install; " +
                         "check the logs and fix your configuration or disable system call filters at your own risk";
                 return BootstrapCheckResult.failure(message);
@@ -559,7 +559,7 @@ final class BootstrapChecks {
 
         @Override
         public BootstrapCheckResult check(BootstrapContext context) {
-            if (isSystemCallFilterInstalled() && mightFork()) {
+            if (isSystemCallFilterInstalled() && mightFork() && !"loongarch64".equals(System.getProperty("os.arch"))) {
                 return BootstrapCheckResult.failure(message(context));
             } else {
                 return BootstrapCheckResult.success();

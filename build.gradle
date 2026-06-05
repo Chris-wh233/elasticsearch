@@ -51,6 +51,18 @@ apply from: 'gradle/run.gradle'
 
 // common maven publishing configuration
 allprojects {
+  repositories {
+    maven {
+      url "https://maven.loongnix.cn/loongarch/maven/"
+      content {
+        includeModule "net.java.dev.jna", "jna"
+        includeModule "net.java.dev.jna", "jna-platform"
+        includeModule "org.lz4", "lz4-java"
+        includeModule "com.google.protobuf", "protoc"
+        includeModule "org.redline-rpm", "redline"
+      }
+    }
+  }
   group = 'org.elasticsearch'
   version = VersionProperties.elasticsearch
   description = "Elasticsearch subproject ${project.path}"

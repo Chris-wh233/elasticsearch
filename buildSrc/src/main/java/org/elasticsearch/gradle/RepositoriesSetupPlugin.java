@@ -69,6 +69,20 @@ public class RepositoriesSetupPlugin implements Plugin<Project> {
             // such that we don't have to pass hardcoded files to gradle
             repos.mavenLocal();
         }
+	repos.maven(repo -> {
+            repo.setName("loongnix-loongarch");
+            repo.setUrl("https://maven.loongnix.cn/loongarch/maven/");
+            repo.content(content -> {
+                content.includeModule("org.elasticsearch", "jna");
+                content.includeModule("net.java.dev.jna", "jna");
+                content.includeModule("net.java.dev.jna", "jna-platform");
+                content.includeModule("org.lz4", "lz4-java");
+                content.includeModule("com.google.protobuf", "protoc");
+		content.includeModule("org.redline-rpm", "redline");
+            });
+        });
+        repos.mavenCentral();
+        repos.gradlePluginPortal();
         repos.jcenter();
 
         String luceneVersion = VersionProperties.getLucene();

@@ -279,6 +279,9 @@ project.rootProject.subprojects.findAll { it.parent.path == ':modules' }.each { 
 // use licenses from each of the bundled xpack plugins
 Project xpack = project(':x-pack:plugin')
 xpack.subprojects.findAll { it.parent == xpack }.each { Project xpackModule ->
+  if (xpackModule.name == 'ml') {
+    return
+  }
   File licenses = new File(xpackModule.projectDir, 'licenses')
   if (licenses.exists()) {
     buildDefaultNoticeTaskProvider.configure {
@@ -384,8 +387,8 @@ configure(subprojects.findAll { ['archives', 'packages'].contains(it.name) }) {
         } else {
           buildModules = buildDefaultModulesTaskProvider
         }
-        List excludePlatforms = ['linux-x86_64', 'linux-aarch64', 'windows-x86_64', 'darwin-x86_64']
-        if (platform != null) {
+        List excludePlatforms = ['linux-x86_64', 'linux-aarch64', 'linux-loongarch64', 'windows-x86_64', 'darwin-x86_64']
+        if (platform != null && excludePlatforms.contains(platform)) {
           excludePlatforms.remove(excludePlatforms.indexOf(platform))
         } else {
           excludePlatforms = []
@@ -490,6 +493,26 @@ configure(subprojects.findAll { ['archives', 'packages'].contains(it.name) }) {
 
     jdkFiles = { Project project, String platform, String architecture ->
       return copySpec {
+        if (architecture == 'loongarch64') {
+          def javaHome = project.findProperty('customJavaHome') ?: System.getenv('JAVA_HOME')
+          if (!javaHome) {
+            throw new GradleException("customJavaHome or JAVA_HOME must be set")
+          }
+          from(new File(javaHome)) {
+            exclude "demo/**"
+            exclude "man/**"
+            eachFile { FileCopyDetails details ->
+              if (details.relativePath.segments[-2] == 'bin' || details.relativePath.segments[-1] == 'jspawnhelper') {
+                details.mode = 0755
+              } else {
+                details.mode = 0644
+              }
+              if (details.name == 'src.zip') {
+                details.exclude()
+              }
+            }
+          }
+        } else {
         from project.jdks."bundled_${platform}_${architecture}"
         exclude "demo/**"
         /*
@@ -506,6 +529,7 @@ configure(subprojects.findAll { ['archives', 'packages'].contains(it.name) }) {
           if (details.name == 'src.zip') {
             details.exclude()
           }
+         }
         }
       }
     }
@@ -678,9 +702,11 @@ subprojects {
 ['archives:windows-zip', 'archives:oss-windows-zip',
  'archives:darwin-tar', 'archives:oss-darwin-tar',
  'archives:linux-aarch64-tar', 'archives:oss-linux-aarch64-tar',
+ 'archives:linux-loongarch64-tar', 'archives:oss-linux-loongarch64-tar',
  'archives:linux-tar', 'archives:oss-linux-tar',
  'archives:integ-test-zip',
  'packages:rpm', 'packages:deb',
+ 'packages:loongarch64-rpm',
  'packages:aarch64-rpm', 'packages:aarch64-deb',
  'packages:oss-rpm', 'packages:oss-deb',
  'packages:aarch64-oss-rpm', 'packages:aarch64-oss-deb'

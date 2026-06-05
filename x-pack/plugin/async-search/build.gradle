@@ -15,9 +15,9 @@ compileTestJava.options.compilerArgs << "-Xlint:-rawtypes"
 gradle.projectsEvaluated {
   project.subprojects
     .find { it.path == project.path + ":qa" }
-    .subprojects
-    .findAll { it.path.startsWith(project.path + ":qa") }
-    .each { check.dependsOn it.check }
+    ?.subprojects
+    ?.findAll { it.path.startsWith(project.path + ":qa") }
+    ?.each { check.dependsOn it.check }
 }
 
 dependencies {

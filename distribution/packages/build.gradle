@@ -116,6 +116,8 @@ Closure commonPackageConfig(String type, boolean oss, boolean jdk, String archit
       assert type == 'rpm' : type
       if (architecture == 'x64') {
         arch('X86_64')
+      } else if (architecture == 'loongarch64') {
+        arch("loongarch64")
       } else {
         assert architecture == 'aarch64' : architecture
         arch('aarch64')
@@ -123,7 +125,7 @@ Closure commonPackageConfig(String type, boolean oss, boolean jdk, String archit
     }
     // Follow elasticsearch's file naming convention
     String jdkString = jdk ? "" : "no-jdk-"
-    String prefix = "${architecture == 'aarch64' ? 'aarch64-' : ''}${oss ? 'oss-' : ''}${jdk ? '' : 'no-jdk-'}${type}"
+    String prefix = "${['aarch64', 'loongarch64'].contains(architecture) ? architecture + '-' : ''}${oss ? 'oss-' : ''}${jdk ? '' : 'no-jdk-'}${type}"
     destinationDirectory = file("${prefix}/build/distributions")
 
     // SystemPackagingTask overrides default archive task convention mappings, but doesn't provide a setter so we have to override the convention mapping itself
@@ -406,6 +408,10 @@ Closure commonRpmConfig(boolean oss, boolean jdk, String architecture) {
 
 tasks.register('buildAarch64Rpm', Rpm) {
   configure(commonRpmConfig(false, true, 'aarch64'))
+}
+
+tasks.register('buildLoongarch64Rpm', Rpm) {
+  configure(commonRpmConfig(false, true, 'loongarch64'))
 }
 
 tasks.register('buildRpm', Rpm) {

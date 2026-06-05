@@ -24,7 +24,7 @@ dependencies {
 
 subprojects {
   afterEvaluate {
-    if (project.plugins.hasPlugin(PluginBuildPlugin)) {
+    if (project.plugins.hasPlugin(PluginBuildPlugin) && rootProject.findProject(':x-pack:test:feature-aware') != null) {
       // see the root Gradle file for additional logic regarding this configuration
       project.configurations.create('featureAwarePlugin')
       project.dependencies.add('featureAwarePlugin', project.configurations.compileClasspath)

@@ -22,7 +22,8 @@ package org.elasticsearch.gradle;
 public enum Architecture {
 
     X64,
-    AARCH64;
+    AARCH64,
+    LOONGARCH64;
 
     public static Architecture current() {
         final String architecture = System.getProperty("os.arch", "");
@@ -32,6 +33,8 @@ public enum Architecture {
                 return X64;
             case "aarch64":
                 return AARCH64;
+	    case "loongarch64":
+                return LOONGARCH64;
             default:
                 throw new IllegalArgumentException("can not determine architecture from [" + architecture + "]");
         }

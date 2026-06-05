@@ -74,7 +74,7 @@ public class InternalDistributionArchiveCheckPlugin implements Plugin<Project> {
         });
 
         String projectName = project.getName();
-        if (projectName.contains("oss") == false && (projectName.contains("zip") || projectName.contains("tar"))) {
+        if (projectName.contains("oss") == false && projectName.contains("loongarch64") == false && (projectName.contains("zip") || projectName.contains("tar"))) {
             project.getExtensions().add("licenseName", "Elastic License");
             project.getExtensions().add("licenseUrl", project.getExtensions().getExtraProperties().get("elasticLicenseUrl"));
             TaskProvider<Task> checkMlCppNoticeTask = registerCheckMlCppNoticeTask(

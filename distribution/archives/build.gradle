@@ -143,6 +143,13 @@ distribution_archives {
     }
   }
 
+  linuxLoongarch64Tar {
+    archiveClassifier = 'linux-loongarch64'
+    content {
+      archiveFiles(modulesFiles(false, 'linux-loongarch64'), 'tar', 'linux', 'loongarch64', false, true)
+    }
+  }
+
   linuxTar {
     archiveClassifier = 'linux-x86_64'
     content {
@@ -154,6 +161,13 @@ distribution_archives {
     archiveClassifier = 'linux-aarch64'
     content {
       archiveFiles(modulesFiles(true, 'linux-aarch64'), 'tar', 'linux', 'aarch64', true, true)
+    }
+  }
+
+  ossLinuxLoongarch64Tar {
+    archiveClassifier = 'linux-loongarch64'
+    content {
+      archiveFiles(modulesFiles(true, 'linux-loongarch64'), 'tar', 'linux', 'loongarch64', true, true)
     }
   }
 
