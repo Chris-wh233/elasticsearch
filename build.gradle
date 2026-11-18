@@ -148,6 +148,21 @@ subprojects { proj ->
 }
 
 allprojects {
+  repositories {
+    exclusiveContent {
+      forRepository {
+        maven {
+          url "https://maven.loongnix.cn/loongarch/maven/"
+        }
+      }
+      filter {
+        includeModule "net.java.dev.jna", "jna"
+        includeModule "net.java.dev.jna", "jna-platform"
+        includeModule "org.lz4", "lz4-java"
+        includeModule "com.google.protobuf", "protoc"
+      }
+    }
+  }
   // We disable this plugin for now till we shaked out the issues we see
   // e.g. see https://github.com/elastic/elasticsearch/issues/72169
   // apply plugin:'elasticsearch.internal-test-rerun'

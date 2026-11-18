@@ -118,6 +118,13 @@ distribution_archives {
     }
   }
 
+  linuxLoongarch64Tar {
+    archiveClassifier = 'linux-loongarch64'
+    content {
+      archiveFiles(modulesFiles('linux-loongarch64'), 'tar', 'linux', 'loongarch64', false, true)
+    }
+  }
+
   linuxTar {
     archiveClassifier = 'linux-x86_64'
     content {

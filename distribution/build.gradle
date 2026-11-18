@@ -350,7 +350,7 @@ configure(subprojects.findAll { ['archives', 'packages'].contains(it.name) }) {
             it.mode = 0644
           }
         }
-        List excludePlatforms = ['linux-x86_64', 'linux-aarch64', 'windows-x86_64', 'darwin-x86_64', 'darwin-aarch64']
+        List excludePlatforms = ['linux-x86_64', 'linux-aarch64', 'linux-loongarch64', 'windows-x86_64', 'darwin-x86_64', 'darwin-aarch64']
         if (platform != null) {
           excludePlatforms.remove(excludePlatforms.indexOf(platform))
         } else {
@@ -441,7 +441,11 @@ configure(subprojects.findAll { ['archives', 'packages'].contains(it.name) }) {
 
     jdkFiles = { Project project, String platform, String architecture ->
       return copySpec {
-        from project.jdks."bundled_${platform}_${architecture}"
+        if (platform == 'linux' && architecture == 'loongarch64') {
+          from project.file(project.providers.gradleProperty('loongarchBundledJdkHome').get())
+        } else {
+          from project.jdks."bundled_${platform}_${architecture}"
+        }
         exclude "demo/**"
         /*
          * The Contents/MacOS directory interferes with notarization, and is unused by our distribution, so we exclude
@@ -626,6 +630,7 @@ subprojects {
  'archives:darwin-tar',
  'archives:darwin-aarch64-tar',
  'archives:linux-aarch64-tar',
+ 'archives:linux-loongarch64-tar',
  'archives:linux-tar',
  'archives:integ-test-zip',
  'packages:rpm', 'packages:deb',

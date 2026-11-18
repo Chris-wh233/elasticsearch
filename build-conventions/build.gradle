@@ -56,6 +56,15 @@ gradlePlugin {
 }
 
 repositories {
+    maven {
+      url "https://maven.loongnix.cn/loongarch/maven/"
+      content {
+        includeModule "net.java.dev.jna", "jna"
+        includeModule "net.java.dev.jna", "jna-platform"
+        includeModule "org.lz4", "lz4-java"
+        includeModule "com.google.protobuf", "protoc"
+      }
+    }
     mavenCentral()
     gradlePluginPortal()
 }
